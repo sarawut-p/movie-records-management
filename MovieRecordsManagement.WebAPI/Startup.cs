@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MovieRecordsManagement.DAL.Domains;
+using MovieRecordsManagement.DAL.Repositories;
 
 namespace MovieRecordsManagement.WebAPI
 {
@@ -23,6 +25,7 @@ namespace MovieRecordsManagement.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IRepository<MovieRecord>, MovieRecordInMemoryRepository>();
             services.AddMvc();
         }
 
