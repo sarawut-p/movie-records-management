@@ -22,7 +22,7 @@ namespace MovieRecordsManagement.DAL.Domains
 
         public MovieRecord()
         {
-            this.Id = new Guid();
+            this.Id = Guid.NewGuid();
         }
     }
 }
