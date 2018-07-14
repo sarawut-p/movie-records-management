@@ -3,41 +3,28 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
 namespace MovieRecordsManagement.DAL.Repositories
 {
-    public class MovieRecordInMemoryRepository : IRepository<MovieRecord>
+    public class MovieRecordInMemoryRepository
     {
-        private static List<MovieRecord> _movieRecords = new List<MovieRecord>()
-        {
-            new MovieRecord(){ MovieTitle = "Titanic", Rating = MovieRecord.RATING_CONST.PG, YearReleased = 1997 },
-            new MovieRecord(){ MovieTitle = "The Matrix", Rating = MovieRecord.RATING_CONST.PG, YearReleased = 1999 },
-            new MovieRecord(){ MovieTitle = "Titanic", Rating = "PG", YearReleased = 1997 }
-        };
+        static IRepository<MovieRecord,Guid> InMemoryMovieRecordRepository;
 
-        public void Add(MovieRecord item)
-        {
-            _movieRecords.Add(item);
+        private MovieRecordInMemoryRepository() {
+
         }
 
-        public void DeleteById(Guid id)
+        public static IRepository<MovieRecord, Guid> getInstance()
         {
-            _movieRecords = _movieRecords.Where(movie => movie.Id != id).ToList();
-        }
+            if(InMemoryMovieRecordRepository == null)
+            {
+                InMemoryMovieRecordRepository = new InMemoryRepository<MovieRecord,Guid>();
+                InMemoryMovieRecordRepository.Add(new MovieRecord() { MovieTitle = "Titanic", Rating = MovieRecord.RATING_CONST.G, YearReleased = 2017 });
+            }
 
-        public MovieRecord FindById(Guid id)
-        {
-            return _movieRecords.Find(item => item.Id == id);
-        }
-
-        public System.Linq.IQueryable<MovieRecord> GetAll()
-        {
-            return _movieRecords.AsQueryable();
-        }
-
-        public void Update(MovieRecord entity)
-        {
-
+            return InMemoryMovieRecordRepository;
         }
     }
 }

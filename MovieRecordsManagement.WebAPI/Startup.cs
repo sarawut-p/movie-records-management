@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MovieRecordsManagement.DAL.Domains;
 using MovieRecordsManagement.DAL.Repositories;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
 namespace MovieRecordsManagement.WebAPI
 {
@@ -25,7 +27,8 @@ namespace MovieRecordsManagement.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IRepository<MovieRecord>, MovieRecordInMemoryRepository>();
+            MovieRecordInMemoryRepository.getInstance().Add(new MovieRecord() { MovieTitle = "Test", Rating = "Test", YearReleased = 2015 });
+            services.AddSingleton(MovieRecordInMemoryRepository.getInstance());
             services.AddMvc();
         }
 

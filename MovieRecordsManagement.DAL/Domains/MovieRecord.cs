@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace MovieRecordsManagement.DAL.Domains
 {
     public class MovieRecord
     {
+        [Key]
         public Guid Id { get; set; }
         public string MovieTitle { get; set; }
         public int YearReleased { get; set; }

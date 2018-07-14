@@ -5,18 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieRecordsManagement.DAL.Domains;
-using MovieRecordsManagement.DAL.Repositories;
 using MovieRecordsManagement.WebMVC.Models;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
 namespace MovieRecordsManagement.WebMVC.Controllers
 {
     public class MovieController : Controller
     {
-        private IRepository<MovieRecord> _movieRecordRepository;
+        private IRepository<MovieRecord, Guid> _movieRecordRepository;
 
-        public MovieController(IRepository<MovieRecord> movieRecordRepository)
+        public MovieController(IRepository<MovieRecord,Guid> movieRecordRepository)
         {
-            this._movieRecordRepository = movieRecordRepository;
+            this._movieRecordRepository = movieRecordRepository;            
         }
 
         // GET: Movie
@@ -58,7 +59,7 @@ namespace MovieRecordsManagement.WebMVC.Controllers
         // GET: Movie/Edit/5
         public ActionResult Edit(Guid id)
         {
-            var movie = this._movieRecordRepository.FindById(id);
+            var movie = this._movieRecordRepository.Find(item=>item.Id==id);
             return View(new MovieEditPageViewModel(movie));
         }
 
@@ -69,10 +70,11 @@ namespace MovieRecordsManagement.WebMVC.Controllers
         {
             try
             {
-                var movieModel = this._movieRecordRepository.FindById(viewModel.MovieViewModel.Id);
+                var movieModel = this._movieRecordRepository.Find(item => item.Id == viewModel.MovieViewModel.Id);
                 movieModel.MovieTitle = viewModel.MovieViewModel.MovieTitle;
                 movieModel.Rating = viewModel.MovieViewModel.Rating;
                 movieModel.YearReleased = viewModel.MovieViewModel.YearReleased;
+                this._movieRecordRepository.Update(movieModel);
 
                 return RedirectToAction(nameof(Index));
             }
