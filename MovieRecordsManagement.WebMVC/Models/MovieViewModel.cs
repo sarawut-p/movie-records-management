@@ -1,4 +1,5 @@
 ﻿using MovieRecordsManagement.DAL.Domains;
+using MovieRecordsManagement.WebMVC.Attrubutes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace MovieRecordsManagement.WebMVC.Models
         public string MovieTitle { get; set; }
 
         [DisplayName("Year Released")]
+        [RangeUntilCurrentYear(1878 , ErrorMessage = "Please enter valid year")]
         [Required]
         public int YearReleased { get; set; }
 
@@ -26,7 +28,7 @@ namespace MovieRecordsManagement.WebMVC.Models
 
         public MovieViewModel()
         {
-
+            this.YearReleased = DateTime.Now.Year;
         }
 
         public MovieViewModel(MovieRecord movieRecord)
