@@ -29,7 +29,19 @@ namespace MovieRecordsManagement.WebAPI
         {
             MovieRecordInMemoryRepository.getInstance().Add(new MovieRecord() { MovieTitle = "Test", Rating = "Test", YearReleased = 2015 });
             services.AddSingleton(MovieRecordInMemoryRepository.getInstance());
-            services.AddMvc();
+
+            services.AddMvcCore()
+                    .AddAuthorization()
+                    .AddJsonFormatters();
+
+            services.AddAuthentication("Bearer")
+                    .AddIdentityServerAuthentication(options =>
+                    {
+                        options.Authority = "http://localhost:5000";
+                        options.RequireHttpsMetadata = false;
+
+                        options.ApiName = "api1";
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +52,7 @@ namespace MovieRecordsManagement.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

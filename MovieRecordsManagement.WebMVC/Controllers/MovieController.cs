@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieRecordsManagement.DAL.Domains;
@@ -11,6 +12,7 @@ using SharpRepository.Repository;
 
 namespace MovieRecordsManagement.WebMVC.Controllers
 {
+    [Authorize]
     public class MovieController : Controller
     {
         private IRepository<MovieRecord, Guid> _movieRecordRepository;
