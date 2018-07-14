@@ -31,18 +31,22 @@ namespace MovieRecordsManagement.WebMVC.Controllers
         // GET: Movie/Create
         public ActionResult Create()
         {
-            return View();
+            var viewModel = new MovieEditPageViewModel(new MovieRecord());
+            return View(viewModel);
         }
 
         // POST: Movie/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(MovieEditPageViewModel viewModel)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                var movie = new MovieRecord();
+                movie.MovieTitle = viewModel.MovieViewModel.MovieTitle;
+                movie.Rating = viewModel.MovieViewModel.Rating;
+                movie.YearReleased = viewModel.MovieViewModel.YearReleased;
+                _movieRecordRepository.Add(movie);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -51,9 +55,9 @@ namespace MovieRecordsManagement.WebMVC.Controllers
             }
         }
         
-        public ActionResult Edit(Guid id)
+        public ActionResult Edit(Guid? id)
         {
-            var movie = this._movieRecordRepository.Find(item=>item.Id==id);
+            var movie = _movieRecordRepository.Find(item=>item.Id==id);
             return View(new MovieEditPageViewModel(movie));
         }
 
