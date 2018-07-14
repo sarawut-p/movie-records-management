@@ -56,19 +56,23 @@ namespace MovieRecordsManagement.WebMVC.Controllers
         }
 
         // GET: Movie/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
-            return View();
+            var movie = this._movieRecordRepository.FindById(id);
+            return View(new MovieEditPageViewModel(movie));
         }
 
         // POST: Movie/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(MovieEditPageViewModel viewModel)
         {
             try
             {
-                // TODO: Add update logic here
+                var movieModel = this._movieRecordRepository.FindById(viewModel.MovieViewModel.Id);
+                movieModel.MovieTitle = viewModel.MovieViewModel.MovieTitle;
+                movieModel.Rating = viewModel.MovieViewModel.Rating;
+                movieModel.YearReleased = viewModel.MovieViewModel.YearReleased;
 
                 return RedirectToAction(nameof(Index));
             }

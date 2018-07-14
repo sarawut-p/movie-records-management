@@ -18,6 +18,7 @@ namespace MovieRecordsManagement.DAL.Domains
             public const string M = "M";
             public const string MA = "MA";
             public const string R = "R";
+            public static readonly string[] ALL_RAINGS =  new[]{ G, PG, M, MA, R };
         }
 
         public MovieRecord()

@@ -34,5 +34,10 @@ namespace MovieRecordsManagement.DAL.Repositories
         {
             return _movieRecords.AsQueryable();
         }
+
+        public void Update(MovieRecord entity)
+        {
+
+        }
     }
 }

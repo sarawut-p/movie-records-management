@@ -11,5 +11,6 @@ namespace MovieRecordsManagement.DAL.Repositories
         void DeleteById(Guid id);
         IQueryable<T> GetAll();
         T FindById(Guid id);
+        void Update(T entity);
     }
 }
