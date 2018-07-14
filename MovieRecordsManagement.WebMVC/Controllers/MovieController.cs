@@ -27,11 +27,6 @@ namespace MovieRecordsManagement.WebMVC.Controllers
             return View(movieViewModels);
         }
 
-        // GET: Movie/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: Movie/Create
         public ActionResult Create()
@@ -55,8 +50,7 @@ namespace MovieRecordsManagement.WebMVC.Controllers
                 return View();
             }
         }
-
-        // GET: Movie/Edit/5
+        
         public ActionResult Edit(Guid id)
         {
             var movie = this._movieRecordRepository.Find(item=>item.Id==id);
@@ -84,21 +78,19 @@ namespace MovieRecordsManagement.WebMVC.Controllers
             }
         }
 
-        // GET: Movie/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
-            return View();
+            var movie = this._movieRecordRepository.Find(item => item.Id == id);
+            return View(new MovieViewModel(movie));
         }
 
-        // POST: Movie/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(MovieViewModel movieViewModel)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                this._movieRecordRepository.Delete(movieViewModel.Id);
                 return RedirectToAction(nameof(Index));
             }
             catch

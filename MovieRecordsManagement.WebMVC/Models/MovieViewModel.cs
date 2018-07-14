@@ -12,7 +12,7 @@ namespace MovieRecordsManagement.WebMVC.Models
     {
         public Guid Id { get; set; }
 
-        [DisplayName("First Name")]
+        [DisplayName("Movie Title")]
         [Required]
         public string MovieTitle { get; set; }
 
