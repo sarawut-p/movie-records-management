@@ -36,17 +36,22 @@ namespace MovieRecordsManagement.WebMVC
                 options.DefaultScheme = "Cookies";
                 options.DefaultChallengeScheme = "oidc";
             })
-                .AddCookie("Cookies")
-                .AddOpenIdConnect("oidc", options =>
-                {
-                    options.SignInScheme = "Cookies";
+            .AddCookie("Cookies")
+            .AddOpenIdConnect("oidc", options =>
+            {
+                options.SignInScheme = "Cookies";
+                options.Authority = "http://localhost:5000";
+                options.RequireHttpsMetadata = false;
+                options.ClientId = "mvc";
+                options.Scope.Add("roles");
+                options.SaveTokens = true;                
+            });
 
-                    options.Authority = "http://localhost:5000";
-                    options.RequireHttpsMetadata = false;
-
-                    options.ClientId = "mvc";
-                    options.SaveTokens = true;
-                });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanReadAndEditMovie", policy => policy.RequireClaim("role", User.ROLE_CONST.MANAGER, User.ROLE_CONST.TEAM_LEADER, User.ROLE_CONST.FLOOR_STAFF));
+                options.AddPolicy("CanDeleteMovie", policy => policy.RequireClaim("role",User.ROLE_CONST.MANAGER));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,7 +73,7 @@ namespace MovieRecordsManagement.WebMVC
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Login}/{action=Index}");
+                    template: "{controller=Movie}/{action=Index}");
             });            
         }
     }

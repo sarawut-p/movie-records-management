@@ -1,9 +1,12 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
+using MovieRecordsManagement.DAL.Domains;
+using MovieRecordsManagement.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MovieRecordsManagement.IdentityServer
@@ -14,7 +17,7 @@ namespace MovieRecordsManagement.IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("api1", "My API",new []{ "roles"})
             };
         }
 
@@ -59,7 +62,7 @@ namespace MovieRecordsManagement.IdentityServer
                     ClientId = "mvc",
                     ClientName = "MVC Client",
                     AllowedGrantTypes = GrantTypes.Implicit,
-
+                    
                     // where to redirect to after login
                     RedirectUris = { "http://localhost:5002/signin-oidc" },
 
@@ -69,8 +72,12 @@ namespace MovieRecordsManagement.IdentityServer
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
-                    }
+                        IdentityServerConstants.StandardScopes.Profile, 
+                        "roles",
+                        "employeeno",
+                        "employeeInfo"
+                    },
+                    AlwaysIncludeUserClaimsInIdToken = true
                 }
             };
         }
@@ -83,13 +90,36 @@ namespace MovieRecordsManagement.IdentityServer
                 {
                     SubjectId = "1",
                     Username = "alice",
-                    Password = "password"
+                    Password = "password",
+                    Claims = new []
+                    {
+                        new Claim("name", "Alice"),
+                        new Claim("role", User.ROLE_CONST.MANAGER),
+                    }
                 },
                 new TestUser
                 {
                     SubjectId = "2",
                     Username = "bob",
-                    Password = "password"
+                    Password = "password",
+
+                    Claims = new []
+                    {
+                        new Claim("name", "Bob"),
+                        new Claim("role", User.ROLE_CONST.TEAM_LEADER),                        
+                    }
+                },
+                new TestUser
+                {
+                    SubjectId = "2",
+                    Username = "charles",
+                    Password = "password",
+
+                    Claims = new []
+                    {
+                        new Claim("name", "charles"),
+                        new Claim("role", User.ROLE_CONST.FLOOR_STAFF),
+                    }
                 }
             };
         }
@@ -100,6 +130,8 @@ namespace MovieRecordsManagement.IdentityServer
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
+                new IdentityResource("roles",new[]{"role"}),
+                new IdentityResource("employeeInfo", new[]{"employeeno"})
             };
         }
     }

@@ -12,7 +12,7 @@ using SharpRepository.Repository;
 
 namespace MovieRecordsManagement.WebMVC.Controllers
 {
-    [Authorize]
+    [Authorize("CanReadAndEditMovie")]
     public class MovieController : Controller
     {
         private IRepository<MovieRecord, Guid> _movieRecordRepository;
@@ -25,7 +25,8 @@ namespace MovieRecordsManagement.WebMVC.Controllers
         // GET: Movie
         public ActionResult Index()
         {
-            var movieViewModels = this._movieRecordRepository.GetAll().Select(item => new MovieViewModel(item));
+            var user = User;
+              var movieViewModels = this._movieRecordRepository.GetAll().Select(item => new MovieViewModel(item));
             return View(movieViewModels);
         }
 
@@ -84,6 +85,7 @@ namespace MovieRecordsManagement.WebMVC.Controllers
             }
         }
 
+        [Authorize("CanDeleteMovie")]
         public ActionResult Delete(Guid id)
         {
             var movie = this._movieRecordRepository.Find(item => item.Id == id);
@@ -92,6 +94,7 @@ namespace MovieRecordsManagement.WebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize("CanDeleteMovie")]
         public ActionResult Delete(MovieViewModel movieViewModel)
         {
             try
